@@ -62,6 +62,8 @@ void polynomial::combine()
     std::vector<std::pair<power, coeff>> other;
 
     // we call this after sorting, sorting helps greatly here
+    // if this wasn't sorted, we'd have to loop over terms twice
+    // since terms are sorted, we can just combine as we go along
     for (size_t i = 0; i < terms.size(); i++)
     {
         if (terms[i].first == other.back().first) // if power of term matches power of other vector
