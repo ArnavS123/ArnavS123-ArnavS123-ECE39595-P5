@@ -82,15 +82,15 @@ class polynomial
          * 1. polynomial % polynomial
          */
         // We need to use 'friend' because these are non-member functions
-        friend polynomial operator+(const polynomial& one, const polynomial& two);
-        friend polynomial operator+(const polynomial& poly, int val);
-        friend polynomial operator+(int val, const polynomial& poly);
+        friend polynomial operator+(const polynomial &one, const polynomial &two);
+        friend polynomial operator+(const polynomial &poly, int val);
+        friend polynomial operator+(int val, const polynomial &poly);
 
-        friend polynomial operator*(const polynomial& one, const polynomial& two);
-        friend polynomial operator*(const polynomial& poly, int val);
-        friend polynomial operator*(int val, const polynomial& poly);
+        friend polynomial operator*(const polynomial &one, const polynomial &two);
+        friend polynomial operator*(const polynomial &poly, int val);
+        friend polynomial operator*(int val, const polynomial &poly);
 
-        friend polynomial operator%(const polynomial& one, const polynomial& two);
+        friend polynomial operator%(const polynomial &p, const polynomial &d);
 
         /**
          * @brief Returns the degree of the polynomial
