@@ -279,66 +279,66 @@ void polynomial::clean()
     return;
 }
 
-// Print polynomial
-void polynomial::print() const
-{
-    if (terms.empty() == true)
-    {
-        std::cout << "0" << std::endl; // empty means its 0
-        return;
-    }
+// // Print polynomial
+// void polynomial::print() const
+// {
+//     if (terms.empty() == true)
+//     {
+//         std::cout << "0" << std::endl; // empty means its 0
+//         return;
+//     }
 
-    bool first = true; // spacing after first term
+//     bool first = true; // spacing after first term
 
-    for (size_t i = 0; i < terms.size(); i++)
-    {
-        coeff coeff = terms[i].second;
-        power power = terms[i].first;
+//     for (size_t i = 0; i < terms.size(); i++)
+//     {
+//         coeff coeff = terms[i].second;
+//         power power = terms[i].first;
 
-        // For the sake of neatness and readability
-        if (first == true)
-        {
-            if (coeff < 0)
-            {
-                std::cout << "-";
-            }
-        }
-        else
-        {
-            if (coeff > 0)
-            {
-                std::cout << " + ";
-            }
-            else
-            {
-                std::cout << " - ";
-            }
-        }
+//         // For the sake of neatness and readability
+//         if (first == true)
+//         {
+//             if (coeff < 0)
+//             {
+//                 std::cout << "-";
+//             }
+//         }
+//         else
+//         {
+//             if (coeff > 0)
+//             {
+//                 std::cout << " + ";
+//             }
+//             else
+//             {
+//                 std::cout << " - ";
+//             }
+//         }
 
-        // We dont want to print a 1 for coeff
-        if (std::abs(coeff) != 1 && power != 0)
-        {
-            std::cout << std::abs(coeff);
-        }
+//         // We dont want to print a 1 for coeff
+//         if (std::abs(coeff) != 1 && power != 0)
+//         {
+//             std::cout << std::abs(coeff);
+//         }
 
-        // we dont want to print x for power of 0 (constant)
-        if (power > 0)
-        {
-            std::cout << "x";
-            if (power > 1) // we also dont want to print a 1 for power
-            {
-                std::cout << "^" << power;
-            }
-        }
-        else // power == 0 (last term so just print the coeff)
-        {
-            std::cout << std::abs(coeff);
-        }
+//         // we dont want to print x for power of 0 (constant)
+//         if (power > 0)
+//         {
+//             std::cout << "x";
+//             if (power > 1) // we also dont want to print a 1 for power
+//             {
+//                 std::cout << "^" << power;
+//             }
+//         }
+//         else // power == 0 (last term so just print the coeff)
+//         {
+//             std::cout << std::abs(coeff);
+//         }
 
-        first = false; // spacing after first term
-    }
+//         first = false; // spacing after first term
+//     }
 
-    std::cout << std::endl; // just a newline
+//     std::cout << std::endl; // just a newline
 
-    return;
-}
+//     return;
+// }
