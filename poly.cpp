@@ -106,7 +106,17 @@ polynomial operator*(const polynomial &one, const polynomial &two)
 {
     polynomial final;
 
-    // TODO
+    // multiply each term in the first polynomial by each term in the second
+    for (size_t i = 0; i < one.terms.size(); i++)
+    {
+        for (size_t j = 0; j < two.terms.size(); j++)
+        {
+            // when using this pair, first will be power and second will be coeff (as stated in poly.h)
+            power power = one.terms[i].first + two.terms[j].first; // add powers together
+            coeff coeff = one.terms[i].second * two.terms[j].second; // multiply coefficients
+            final.terms.push_back({power, coeff});
+        }
+    }
     
     final.sort();
     final.combine();
@@ -120,7 +130,16 @@ polynomial operator*(const polynomial &poly, int val)
 {
     polynomial final;
 
-    // TODO
+    // multiply each terms coeff by the val
+    for (size_t i = 0; i < poly.terms.size(); i++)
+    {
+        // only change the coeffecient
+        final.terms.push_back({poly.terms[i].first, poly.terms[i].second * val});
+    }
+
+    final.sort();
+    final.combine();
+    final.clean();
 
     return(final);
 }
@@ -150,6 +169,20 @@ polynomial operator%(const polynomial &one, const polynomial &two)
     return(final);
 }
 
+// Polynomial degree
+size_t polynomial::find_degree_of()
+{
+    // Assuming everything is sorted
+    return(terms[0].first);
+}
+
+// Polynomial in canonical form
+std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
+{
+    // Assuming everything is sorted
+    return(terms);
+}
+
 // Helper function: sort
 void polynomial::sort()
 {
@@ -173,20 +206,6 @@ void polynomial::sort()
     }
 
     return;
-}
-
-// Polynomial degree
-size_t polynomial::find_degree_of()
-{
-    // Assuming everything is sorted
-    return(terms[0].first);
-}
-
-// Polynomial in canonical form
-std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
-{
-    // Assuming everything is sorted
-    return(terms);
 }
 
 // Helper function: combine
