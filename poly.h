@@ -51,7 +51,7 @@ class polynomial
          * Only used for debugging, isn't graded.
          *
          */
-        void print() const;
+        // void print() const;
 
         /**
          * @brief Turn the current polynomial instance into a deep copy of another

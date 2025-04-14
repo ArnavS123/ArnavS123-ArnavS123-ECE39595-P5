@@ -1,5 +1,5 @@
 #include "poly.h"
-#include <iostream>
+// #include <iostream>
 
 // Default Constructor
 polynomial::polynomial()
