@@ -124,3 +124,13 @@ class polynomial
 };
 
 #endif
+
+template <typename Iter>
+polynomial::polynomial(Iter start, Iter end)
+{
+    terms.assign(start, end);
+
+    sort();
+    combine();
+    clean();
+}

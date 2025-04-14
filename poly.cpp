@@ -8,22 +8,6 @@ polynomial::polynomial()
     terms.push_back({0, 0}); // super easy, zero polynomial has canonical form as [(0,0)]
 }
 
-// Constructor
-template <typename Iter>
-polynomial::polynomial(Iter start, Iter end)
-{
-    terms.assign(start, end);
-
-    // sort all terms
-    sort();
-
-    // combine like terms
-    combine();
-
-    // clean '0' terms
-    clean();
-}
-
 // Copy Constructor
 polynomial::polynomial(const polynomial &other)
 {
