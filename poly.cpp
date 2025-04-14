@@ -156,17 +156,33 @@ polynomial operator*(int val, const polynomial &poly)
 }
 
 // % operator (polynomial % polynomial)
-polynomial operator%(const polynomial &one, const polynomial &two)
+polynomial operator%(const polynomial &p, const polynomial &d) // This one needs to be done differently
 {
-    polynomial final;
+    polynomial r;
 
-    // TODO
+    r = p; // = operator
 
-    final.sort();
-    final.combine();
-    final.clean();
+    r.sort();
+    r.combine();
+    r.clean();
 
-    return(final);
+    while ((r.terms[0].second != 0) && (r.terms[0].first >= d.terms[0].first)) // wikipedia (pseudocode)
+    {
+        power diff_power = r.terms[0].first - d.terms[0].first; // subtract powers
+        coeff diff_coeff = r.terms[0].second / d.terms[0].second; // divide coeffs
+
+        // temp polynomial to combine diff_power and diff_coeff into polynomial
+        polynomial temp;
+        temp.terms.push_back({diff_power, diff_coeff});
+
+        // update remainder and sort it for next (or last) iteration of loop
+        r = r + ((-1) * (temp) * d); // wikipedia (pseudocode)
+        r.sort();
+        r.combine();
+        r.clean();
+    }
+
+    return(r);
 }
 
 // Polynomial degree
