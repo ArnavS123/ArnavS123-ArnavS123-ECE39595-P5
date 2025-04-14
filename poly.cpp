@@ -1,5 +1,4 @@
 #include "poly.h"
-#include <algorithm>
 #include <iostream>
 
 // Default Constructor
@@ -31,6 +30,7 @@ polynomial::polynomial(const polynomial &other)
     terms = other.terms; // simple copy
 }
 
+// = operator
 polynomial& polynomial::operator=(const polynomial &other)
 {
     if (this != &other)
@@ -41,17 +41,155 @@ polynomial& polynomial::operator=(const polynomial &other)
     return(*this);
 }
 
-// other operators ~~~~~~~~~~~~~~~~~~~~
+// + operator (polynomial + polynomial)
+polynomial operator+(const polynomial &one, const polynomial &two)
+{
+    polynomial final;
 
+    // toss in all the terms for polynomial one
+    for (size_t i = 0; i < one.terms.size(); i++)
+    {
+        final.terms.push_back(one.terms[i]);
+    }
+
+    // toss in all the terms for polynomial two
+    for (size_t i = 0; i < two.terms.size(); i++)
+    {
+        final.terms.push_back(two.terms[i]);
+    }
+
+    // mix
+    final.sort();
+    final.combine();
+    final.clean();
+
+    return(final);
+}
+
+// + operator (polynomial + int)
+polynomial operator+(const polynomial &poly, int val)
+{
+    polynomial final;
+    
+    final = poly; // = operator used
+
+    // We assume that everything is sorted
+    if (final.terms.back().first == 0) // Add val to constant
+    {
+        final.terms.back().second += val;
+    }
+    else // Toss val in at the end
+    {
+        final.terms.push_back({0, val});
+    }
+
+    final.sort();
+    final.combine();
+    final.clean();
+
+    return(final);
+}
+
+// + operator (int + polynomial)
+polynomial operator+(int val, const polynomial &poly)
+{
+    // very simple, we flip it and use the previous (polynomial + int) function
+    polynomial final;
+
+    final = poly + val;
+
+    return(final);
+}
+
+// * operator (polynomial * polynomial)
+polynomial operator*(const polynomial &one, const polynomial &two)
+{
+    polynomial final;
+
+    // TODO
+    
+    final.sort();
+    final.combine();
+    final.clean();
+
+    return(final);
+}
+
+// * operator (polynomial * int)
+polynomial operator*(const polynomial &poly, int val)
+{
+    polynomial final;
+
+    // TODO
+
+    return(final);
+}
+
+// * operator (int * polynomial)
+polynomial operator*(int val, const polynomial &poly)
+{
+    // very simple, we flip it and use the previous (polynomial * int) function
+    polynomial final;
+
+    final = poly * val;
+
+    return(final);
+}
+
+// % operator (polynomial % polynomial)
+polynomial operator%(const polynomial &one, const polynomial &two)
+{
+    polynomial final;
+
+    // TODO
+
+    final.sort();
+    final.combine();
+    final.clean();
+
+    return(final);
+}
+
+// Helper function: sort
 void polynomial::sort()
 {
-    // algorithm library (https://www.digitalocean.com/community/tutorials/sorting-a-vector-in-c-plus-plus)
-    // lambda function used
-    std::sort(terms.begin(), terms.end(), [](auto &a, auto &b){ return a.first > b.first; });
+    if (terms.empty() == true)
+    {
+        return;
+    }
+
+    // DIY sorting (bubble sort)
+    for (size_t i = 0; i < terms.size(); i++)
+    {
+        for (size_t j = 0; j < terms.size() - i - 1; j++)
+        {
+            if (terms[j].first < terms[j + 1].first) // decreasing order: <
+            {
+                auto temp = terms[j];
+                terms[j] = terms[j + 1];
+                terms[j + 1] = temp;
+            }
+        }
+    }
 
     return;
 }
 
+// Polynomial degree
+size_t polynomial::find_degree_of()
+{
+    // Assuming everything is sorted
+    return(terms[0].first);
+}
+
+// Polynomial in canonical form
+std::vector<std::pair<power, coeff>> polynomial::canonical_form() const
+{
+    // Assuming everything is sorted
+    return(terms);
+}
+
+// Helper function: combine
 void polynomial::combine()
 {
     if (terms.empty() == true)
@@ -81,8 +219,16 @@ void polynomial::combine()
     return;
 }
 
+// Helper function: clean
 void polynomial::clean()
 {
+    if (terms.empty() == true)
+    {
+        // we want there to always be a zero term in an "empty" polynomial
+        terms.push_back({0, 0}); // we only do this once (in the last helper function)
+        return;
+    }
+
     std::vector<std::pair<power, coeff>> other;
 
     for (size_t i = 0; i < terms.size(); i++)
@@ -93,63 +239,71 @@ void polynomial::clean()
         }
     }
 
-    // special case: if empty, push in zero polynomial
-    if (other.empty() == true)
-    {
-        other.push_back({0, 0});
-    }
-
     terms = move(other); // transfer information
 
     return;
 }
 
+// Print polynomial
 void polynomial::print() const
 {
-    if (terms.empty()) {
-        std::cout << "0\n";
+    if (terms.empty() == true)
+    {
+        std::cout << "0" << std::endl; // empty means its 0
         return;
     }
 
-    bool first_term = true;
+    bool first = true; // spacing after first term
 
-    for (const auto& term : terms)
+    for (size_t i = 0; i < terms.size(); i++)
     {
-        coeff c = term.second;
-        power p = term.first;
+        coeff coeff = terms[i].second;
+        power power = terms[i].first;
 
-        if (c == 0) continue; // shouldn't happen if clean() worked, but extra safe
-
-        // Handle sign
-        if (!first_term)
+        // For the sake of neatness and readability
+        if (first == true)
         {
-            if (c > 0)
-                std::cout << " + ";
-            else
-                std::cout << " - ";
+            if (coeff < 0)
+            {
+                std::cout << "-";
+            }
         }
         else
         {
-            if (c < 0)
-                std::cout << "-";
+            if (coeff > 0)
+            {
+                std::cout << " + ";
+            }
+            else
+            {
+                std::cout << " - ";
+            }
         }
 
-        // Handle absolute value of coefficient
-        if (std::abs(c) != 1 || p == 0)  // Don't print 1 or -1 for non-constant terms
-            std::cout << std::abs(c);
+        // We dont want to print a 1 for coeff
+        if (std::abs(coeff) != 1 && power != 0)
+        {
+            std::cout << std::abs(coeff);
+        }
 
-        // Handle variable and exponent
-        if (p > 0)
+        // we dont want to print x for power of 0 (constant)
+        if (power > 0)
         {
             std::cout << "x";
-            if (p > 1)
-                std::cout << "^" << p;
+            if (power > 1) // we also dont want to print a 1 for power
+            {
+                std::cout << "^" << power;
+            }
+        }
+        else // power == 0 (last term so just print the coeff)
+        {
+            std::cout << std::abs(coeff);
         }
 
-        first_term = false;
+        first = false; // spacing after first term
     }
 
-    std::cout << std::endl;
+    std::cout << std::endl; // just a newline
 
     return;
 }

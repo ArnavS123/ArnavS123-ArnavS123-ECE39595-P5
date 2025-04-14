@@ -64,7 +64,6 @@ class polynomial
          */
         polynomial &operator=(const polynomial &other);
 
-
         /**
          * Overload the +, * and % operators. The function prototypes are not
          * provided.
@@ -82,7 +81,16 @@ class polynomial
          * Modulo (%) should support
          * 1. polynomial % polynomial
          */
-        
+        // We need to use 'friend' because these are non-member functions
+        friend polynomial operator+(const polynomial& one, const polynomial& two);
+        friend polynomial operator+(const polynomial& poly, int val);
+        friend polynomial operator+(int val, const polynomial& poly);
+
+        friend polynomial operator*(const polynomial& one, const polynomial& two);
+        friend polynomial operator*(const polynomial& poly, int val);
+        friend polynomial operator*(int val, const polynomial& poly);
+
+        friend polynomial operator%(const polynomial& one, const polynomial& two);
 
         /**
          * @brief Returns the degree of the polynomial
