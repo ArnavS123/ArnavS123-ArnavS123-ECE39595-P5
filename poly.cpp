@@ -223,7 +223,11 @@ void polynomial::combine()
     // since terms are sorted, we can just combine as we go along
     for (size_t i = 0; i < terms.size(); i++)
     {
-        if (terms[i].first == other.back().first) // if power of term matches power of other vector
+        if (other.empty() == true) // we need this check (.back() doesnt work if empty)
+        {
+            other.push_back(terms[i]);
+        }
+        else if (terms[i].first == other.back().first) // if power of term matches power of other vector
         {
             other.back().second += terms[i].second; // combine coefficients
         }
